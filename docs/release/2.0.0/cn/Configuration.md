@@ -1,41 +1,38 @@
 ---
-title: Configuration
+title: 配置
 layout: documentation
 documentation: true
 ---
-Storm has a variety of configurations for tweaking the behavior of nimbus, supervisors, and running topologies. Some configurations are system configurations and cannot be modified on a topology by topology basis, whereas other configurations can be modified per topology. 
+Storm有各种配置来调整nimbus，supervisors和运行中拓扑的行为。某些配置是系统配置，无法通过拓扑基础在拓扑上进行修改，而其他配置可以按拓扑进行修改。
 
-Every configuration has a default value defined in [defaults.yaml]({{page.git-blob-base}}/conf/defaults.yaml) in the Storm codebase. You can override these configurations by defining a storm.yaml in the classpath of Nimbus and the supervisors. Finally, you can define a topology-specific configuration that you submit along with your topology when using [StormSubmitter](javadocs/org/apache/storm/StormSubmitter.md). However, the topology-specific configuration can only override configs prefixed with "TOPOLOGY".
 
-Storm 0.7.0 and onwards lets you override configuration on a per-bolt/per-spout basis. The only configurations that can be overriden this way are:
+每个配置都有一个默认值，在Storm codebase中的[defaults.yaml]({{page.git-blob-base}}/conf/defaults.yaml)中定义。您可以通过在Nimbus和supervisors的类路径中定义storm.yaml来覆盖这些配置。最后，您可以定义在使用[StormSubmitter](javadocs/org/apache/storm/StormSubmitter.md)时与拓扑一起提交的特定于拓扑的配置。但是，特定于拓扑的配置只能覆盖前缀为“拓扑”的配置。
+
+Storm 0.7.0及更高版本允许您基于每个bolt/每个spout的基础上覆盖配置。可以通过这种方式覆盖的唯一配置是：
 
 1. "topology.debug"
 2. "topology.max.spout.pending"
 3. "topology.max.task.parallelism"
-4. "topology.kryo.register": This works a little bit differently than the other ones, since the serializations will be available to all components in the topology. More details on [Serialization](Serialization.md). 
+4. "topology.kryo.register": 这与其他组件的工作方式略有不同，因为序列化将可用于拓扑中的所有组件。有关[序列化](Serialization.md)的更多详细信息。
 
-The Java API lets you specify component specific configurations in two ways:
+Java API允许您以两种方式指定组件特定的配置：
 
-1. *Internally:* Override `getComponentConfiguration` in any spout or bolt and return the component-specific configuration map.
-2. *Externally:* `setSpout` and `setBolt` in `TopologyBuilder` return an object with methods `addConfiguration` and `addConfigurations` that can be used to override the configurations for the component.
+1. *内部:* 在任何spout或bolt中覆盖`getComponentConfiguration`并返回特定于组件的配置map。
+2. *外部:* `topSpilder`中的`setSpout`和`setBolt`返回一个带有方法`addConfiguration`和`addConfigurations`的对象，可以用来覆盖组件的配置。
 
-The preference order for configuration values is defaults.yaml < storm.yaml < topology specific configuration < internal component specific configuration < external component specific configuration. 
+配置值的首选顺序是defaults.yaml < storm.yaml < 拓扑特定配置 < 内部组件特定配置 < 外部组件特定配置。
 
-# Bolts, Spouts, and Plugins
-In almost all cases configuration for a bolt or a spout should be done though setters on the bolt or spout implementation and not the topology conf.  In some rare cases it may make since to
-expose topology wide configurations that are not currently a part of [Config](javadocs/org/apache/storm/Config.md) or [DaemonConfig](javadocs/org/apache/storm/DaemonConfig.md) such as
-when writing a custom scheduler or a plugin to some part of storm.  In those
-cases you can create your own class like Config but implements [Validated](javadocs/org/apache/storm/validation/Validated.md). Any `public static final String` field declared in this
-class will be treated as a config and annotations from the `org.apache.storm.validation.ConfigValidationAnnotations` class can be used to enforce what is stored in that config.
-To let the validator know about this class you need to treat the class
-like a service that will be loaded through a ServiceLoader for the Validated class and include a `META-INF/services/org.apache.storm.validation.Validated` file in your jar that holds
-the name of your Config class.
+# Bolts，Spouts和插件
+在几乎所有情况下，bolt或spout的配置都应该通过bolt或spout实施的设置器来完成，而不是拓扑配置。在某些罕见的情况下，它可能会成为
+暴露拓扑宽配置，这些配置目前不是[Config](javadocs/org/apache/storm/Config.md) 或[DaemonConfig](javadocs/org/apache/storm/DaemonConfig.md)的一部分，例如
+在为storm的某些部分编写自定义调度程序或插件时。在那些您可以创建自己的类，例如Config，但实现[[Validated](javadocs/org/apache/storm/validation/Validated.md)。在此类声明的任何 `public static final String`字段将被视为配置，并且来自`org.apache.storm.validation.ConfigValidationAnnotations` 类的注释可用于强制执行该配置中存储的内容。
+为了让验证器了解这个类，你需要将类视为一个服务，它将通过ServiceLoader 为Validated类加载，并包含一个`META-INF/services/org.apache.storm.validation.Validated`文件在你的jar中，它包含你的Config类的名字。
 
-**Resources:**
+**资源:**
 
-* [Config](javadocs/org/apache/storm/Config.md): a listing of client configurations as well as a helper class for creating topology specific configurations
-* [DaemonConfig](javadocs/org/apache/storm/DaemonConfig.md): a listing of Storm Daemon configurations.
-* [defaults.yaml]({{page.git-blob-base}}/conf/defaults.yaml): the default values for all configurations
-* [Setting up a Storm cluster](Setting-up-a-Storm-cluster.md): explains how to create and configure a Storm cluster
-* [Running topologies on a production cluster](Running-topologies-on-a-production-cluster.md): lists useful configurations when running topologies on a cluster
-* [Local mode](Local-mode.md): lists useful configurations when using local mode
+* [配置](javadocs/org/apache/storm/Config.md): 客户端配置列表以及用于创建拓扑特定配置的帮助类
+* [DaemonConfig](javadocs/org/apache/storm/DaemonConfig.md): Storm守护程序配置列表。
+* [defaults.yaml]({{page.git-blob-base}}/conf/defaults.yaml): 所有配置的默认值
+* [设置Storm集群](Setting-up-a-Storm-cluster.md): 解释如何创建和配置Storm集群
+* [在生产集群集上运行拓扑](Running-topologies-on-a-production-cluster.md): 列出在群集上运行拓扑时的有用配置
+* [本地模式](Local-mode.md): 列出使用本地模式时的有用配置

@@ -8,7 +8,7 @@ documentation: true
 * [Javadoc](http://storm.apache.org/releases/2.0.0-SNAPSHOT/javadocs/index.html)
 * [教程](Tutorial.md)
 * [概念](Concepts.md)
-* [调度程序](Storm-Scheduler.md)
+* [调度](Storm-Scheduler.md)
 * [配置](Configuration.md)
 * [保证信息处理](Guarantee-message-processing.md)
 * [守护程序容错](Daemon-Fault-Tolerance.md)
