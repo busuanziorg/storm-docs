@@ -3,4 +3,5 @@
 !.gitignore
 !README.md
 docs/i
+docs/index.md
 .DS_store

@@ -10,7 +10,7 @@ documentation: true
 * [概念](Concepts.md)
 * [调度](Storm-Scheduler.md)
 * [配置](Configuration.md)
-* [保证信息处理](Guarantee-message-processing.md)
+* [保证消息处理](Guaranteeing-message-processing.md)
 * [守护程序容错](Daemon-Fault-Tolerance.md)
 * [命令行客户端](Command-line-client.md)
 * [REST API](STORM-UI-REST-API.md)
