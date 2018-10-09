@@ -1,11 +1,11 @@
 ---
-title: Command Line Client
+title: 命令行客户端
 layout: documentation
 documentation: true
 ---
-This page describes all the commands that are possible with the "storm" command line client. To learn how to set up your "storm" client to talk to a remote cluster, follow the instructions in [Setting up development environment](Setting-up-development-environment.md). See [Classpath handling](Classpath-handling.md) for details on using external libraries in these commands.
+此页面描述了“storm”命令行客户端可能执行的所有命令。要了解如何设置“storm”客户端以与远程群集通信，请按照[设置开发环境](Setting-up-development-environment.md). 中的说明进行操作。有关在这些命令中使用外部库的详细信息，请参阅[类路径处理](Classpath-handling.md)。
 
-These commands are:
+这些命令是：
 
 1. jar
 1. local
@@ -43,65 +43,65 @@ These commands are:
 
 ### jar
 
-Syntax: `storm jar topology-jar-path class ...`
+语法： `storm jar topology-jar-path class ...`
 
-Runs the main method of `class` with the specified arguments. The storm jars and configs in `~/.storm` are put on the classpath. The process is configured so that [StormSubmitter](javadocs/org/apache/storm/StormSubmitter.md) will upload the jar at `topology-jar-path` when the topology is submitted.
+使用指定的参数运行`class`的main方法。`~/.storm`中storm的jar和配置被放在类路径上。配置该进程，以便提交拓扑时[StormSubmitter](javadocs/org/apache/storm/StormSubmitter.md) 在`topology-jar-path`上传jar。
 
-When you want to ship other jars which is not included to application jar, you can pass them to `--jars` option with comma-separated string.
-For example, --jars "your-local-jar.jar,your-local-jar2.jar" will load your-local-jar.jar and your-local-jar2.jar.
-And when you want to ship maven artifacts and its transitive dependencies, you can pass them to `--artifacts` with comma-separated string. You can also exclude some dependencies like what you're doing in maven pom. Please add exclusion artifacts with '^' separated string after the artifact. For example, `--artifacts "redis.clients:jedis:2.9.0,org.apache.kafka:kafka_2.10:0.8.2.2^org.slf4j:slf4j-log4j12"` will load jedis and kafka artifact and all of transitive dependencies but exclude slf4j-log4j12 from kafka.
+如果要加载未包含在应用程序jar中的其他jar，可以使用逗号分隔的字符串将它们传递给`--jars`选项。
+例如， --jars "your-local-jar.jar,your-local-jar2.jar"将加载your-local-jar.jar和your-local-jar2.jar。
+当你想发送maven包及其传递依赖时，你可以用逗号分隔的字符串将它们传递给`--artifacts` 。您还可以排除某些依赖关系，例如您在maven pom中所做的事情。请在包的后边增加包移除符'^'。例如， `--artifacts "redis.clients:jedis:2.9.0,org.apache.kafka:kafka_2.10:0.8.2.2^org.slf4j:slf4j-log4j12"` 将会加载jedis、kafka包和所有的传递依赖，但是会从kafka中排除slf4j-log4j12。
 
-When you need to pull the artifacts from other than Maven Central, you can pass remote repositories to --artifactRepositories option with comma-separated string. Repository format is "<name>^<url>". '^' is taken as separator because URL allows various characters. For example, --artifactRepositories "jboss-repository^http://repository.jboss.com/maven2,HDPRepo^http://repo.hortonworks.com/content/groups/public/" will add JBoss and HDP repositories for dependency resolver.
+当您需要从Maven Central以外的地方获取依赖包时，可以使用逗号分隔的字符串将远程存储库传递到 --artifactRepositories选项。仓库格式为"<name>^<url>"。'^' 被视为分隔符，因为URL允许各种字符。 例如， --artifactRepositories "jboss-repository^http://repository.jboss.com/maven2,HDPRepo^http://repo.hortonworks.com/content/groups/public/"将会为依赖项解析器增加JBoss和HDP仓库。
 
-Complete example of both options is here: `./bin/storm jar example/storm-starter/storm-starter-topologies-*.jar org.apache.storm.starter.RollingTopWords blobstore-remote2 remote --jars "./external/storm-redis/storm-redis-1.1.0.jar,./external/storm-kafka-client/storm-kafka-client-1.1.0.jar" --artifacts "redis.clients:jedis:2.9.0,org.apache.kafka:kafka-clients:1.0.0^org.slf4j:slf4j-api" --artifactRepositories "jboss-repository^http://repository.jboss.com/maven2,HDPRepo^http://repo.hortonworks.com/content/groups/public/"`
+这两个选项的完整示例如下： `./bin/storm jar example/storm-starter/storm-starter-topologies-*.jar org.apache.storm.starter.RollingTopWords blobstore-remote2 remote --jars "./external/storm-redis/storm-redis-1.1.0.jar,./external/storm-kafka-client/storm-kafka-client-1.1.0.jar" --artifacts "redis.clients:jedis:2.9.0,org.apache.kafka:kafka-clients:1.0.0^org.slf4j:slf4j-api" --artifactRepositories "jboss-repository^http://repository.jboss.com/maven2,HDPRepo^http://repo.hortonworks.com/content/groups/public/"`
 
-When you pass jars and/or artifacts options, StormSubmitter will upload them when the topology is submitted, and they will be included to classpath of both the process which runs the class, and also workers for that topology.
+当您上传jars和/或依赖包选项时，将在提交拓扑时上传它们，并且它们将包含在该运行的类和拓扑的worker这两者的类路径中。
 
 ### local
 
-Syntax: `storm jar topology-jar-path class ...`
+语法： `storm jar topology-jar-path class ...`
 
-The local command acts just like `storm jar` except instead of submitting a topology to a cluster it will run the cluster in local mode.  This means an embedded version of the storm daemons will be run within the same process as your topology for 30 seconds before it shuts down automatically.  As such the classpath of your topology will be extended to include everything needed to run those daemons.
+本地命令就像`storm jar` 一样，除了不向集群提交拓扑外，它将以本地模式运行集群。这意味着后台程序的嵌入式版本将在与拓扑相同的进程中运行30秒，然后自动关闭。因此，拓扑的类路径将扩展为包括运行这些守护进程所需的所有内容。
 
 ### sql
 
-Syntax: `storm sql sql-file topology-name`
+语法： `storm sql sql-file topology-name`
 
-Compiles the SQL statements into a Trident topology and submits it to Storm.
+将SQL语句编译为Trident拓扑并将其提交给Storm。
 
-`--jars` and `--artifacts`, and `--artifactRepositories` options available for jar are also applied to sql command. Please refer "help jar" to see how to use --jars and --artifacts, and --artifactRepositories options. You normally want to pass these options since you need to set data source to your sql which is an external storage in many cases.
+`--jars`和`--artifacts`，以及`--artifactRepositories`选项也适用于sql命令。请参阅"help jar"以了解如何使用--jars、--artifacts和--artifactRepositories选项。您通常希望传递这些选项，因为在许多情况下需要将数据源设置为sql，这是一个外部存储。
 
 ### kill
 
-Syntax: `storm kill topology-name [-w wait-time-secs]`
+语法： `storm kill topology-name [-w wait-time-secs]`
 
-Kills the topology with the name `topology-name`. Storm will first deactivate the topology's spouts for the duration of the topology's message timeout to allow all messages currently being processed to finish processing. Storm will then shutdown the workers and clean up their state. You can override the length of time Storm waits between deactivation and shutdown with the -w flag.
+使用名称`topology-name`终止拓扑。Storm将在拓扑的消息超时期间首先停用拓扑的spouts，以允许当前正在处理的所有消息完成处理。storm将关闭worker并清理他们的状态。您可以使用-w标志覆盖Storm在停用和关闭之间等待的时间长度。
 
 ### activate
 
-Syntax: `storm activate topology-name`
+语法： `storm activate topology-name`
 
-Activates the specified topology's spouts.
+启用指定拓扑的spout。
 
 ### deactivate
 
-Syntax: `storm deactivate topology-name`
+语法： `storm deactivate topology-name`
 
-Deactivates the specified topology's spouts.
+停用指定拓扑的spout。
 
 ### rebalance
 
-Syntax: `storm rebalance topology-name [-w wait-time-secs] [-n new-num-workers] [-e component=parallelism]*`
+语法： `storm rebalance topology-name [-w wait-time-secs] [-n new-num-workers] [-e component=parallelism]*`
 
-Sometimes you may wish to spread out where the workers for a topology are running. For example, let's say you have a 10 node cluster running 4 workers per node, and then let's say you add another 10 nodes to the cluster. You may wish to have Storm spread out the workers for the running topology so that each node runs 2 workers. One way to do this is to kill the topology and resubmit it, but Storm provides a "rebalance" command that provides an easier way to do this. 
+有时候你可能希望分散拓扑正在运行的worker。例如，假如说你有10个节点集群，每个节点运行4个worker，后来增加了10个节点。你也许想着让storm在运行的拓扑上分散worker，每个节点运行2个worker。一个办法是终止拓扑并重新提交。但是storm可以简单使用“rebalance”命令就可实现。
 
-Rebalance will first deactivate the topology for the duration of the message timeout (overridable with the -w flag) and then redistribute the workers evenly around the cluster. The topology will then return to its previous state of activation (so a deactivated topology will still be deactivated and an activated topology will go back to being activated).
+重新平衡将在消息超时（使用-w标志可覆盖）终止拓扑，并且在集群中重新均匀的分配worker。拓扑将会返回先前的激活状态（所以一个非激活的拓扑将一直处于非激活状态，并且一个激活状态的拓扑将会重回激活状态【译者云-说人话就是rebalance只是起到重新均匀分配worker作用，而拓扑状态rebalance之前是什么样，rebalance之后还是什么样】）。
 
-The rebalance command can also be used to change the parallelism of a running topology. Use the -n and -e switches to change the number of workers or number of executors of a component respectively.
+rebalance命令还可用于更改正在运行的拓扑的并行性。使用-n和-e开关分别更改组件的workers或executors（执行器）数量。
 
 ### repl
 
-Syntax: `storm repl`
+语法： `storm repl`
 
 Opens up a Clojure REPL with the storm jars and configuration on the classpath. Useful for debugging.
 
@@ -284,7 +284,7 @@ See Setting up a Storm cluster for more information.(http://storm.apache.org/doc
 Syntax: `storm set_log_level -l [logger name]=[log level][:optional timeout] -r [logger name] topology-name`
 
 Dynamically change topology log levels
-    
+
 where log level is one of: ALL, TRACE, DEBUG, INFO, WARN, ERROR, FATAL, OFF
 and timeout is integer seconds.
 
@@ -334,7 +334,7 @@ The storm admin command provides access to several operations that can help an a
 `remove_corrupt_topologies` - This command should be run on a nimbus node as the same user nimbus runs as.  It will go directly to zookeeper + blobstore and find topologies that appear to be corrupted because of missing blobs. It will kill those topologies.
 
  `zk_cli [options]` - This command will launch a zookeeper cli pointing to the storm zookeeper instance logged in as the nimbus user.  It should be run on a nimbus server as the user nimbus runs as.
- 
+
    * `-s --server <connection string>`: Set the connection string to use,
             defaults to storm connection string.
    * `-t --time-out <timeout>`:  Set the timeout to use, defaults to storm
